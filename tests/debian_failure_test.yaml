@@ -11,6 +11,15 @@ commandTests:
 - name: 'path'
   command: ['sh', '-c', 'echo $PATH']
   expectedOutput: ['/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin']
+- name: 'command setup'
+  setup: [["touch", "/command-setup.txt"]]
+  command: 'ls'
+  args: ['/command-setup.txt']
+  expectedOutput: ['ls: cannot access ''/blah'': No such file or directory']
+- name: 'No command'
+  command: ''
+- name: ''
+  command: 'pwd'
 fileContentTests:
 - name: 'Debian Sources'
   excludedContents: ['.*gce_debian_mirror.*']
@@ -27,6 +36,10 @@ fileExistenceTests:
   path: '/etc/apt/sources.list'
   permissions: '-rwxrwxrwx'
   shouldExist: true
+- name: 'file setup'
+  setup: [["touch", "/file-setup.txt"]]
+  path: '/file-setup.txt'
+  shouldExist: false
 licenseTests:
 - debian: true
   files:

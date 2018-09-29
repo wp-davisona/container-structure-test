@@ -30,7 +30,7 @@ import (
 var defaultOwnership = -1
 
 type FileExistenceTest struct {
-	Name           string `yaml:"name"`           // name of test
+	BaseTest       `yaml:",inline"`
 	Path           string `yaml:"path"`           // file to check existence of
 	ShouldExist    bool   `yaml:"shouldExist"`    // whether or not the file should exist
 	Permissions    string `yaml:"permissions"`    // expected Unix permission string of the file, e.g. drwxrwxrwx
@@ -62,18 +62,12 @@ func (fe *FileExistenceTest) UnmarshalYAML(unmarshal func(interface{}) error) er
 
 func (ft FileExistenceTest) Validate(channel chan interface{}) bool {
 	res := &types.TestResult{}
-	if ft.Name == "" {
-		res.Errorf("Please provide a valid name for every test")
-	}
-	res.Name = ft.Name
+
 	if ft.Path == "" {
 		res.Errorf("Please provide a valid file path for test %s", ft.Name)
 	}
-	if len(res.Errors) > 0 {
-		channel <- res
-		return false
-	}
-	return true
+
+	return ft.BaseTest.Validate(channel, res)
 }
 
 func (ft FileExistenceTest) LogName() string {

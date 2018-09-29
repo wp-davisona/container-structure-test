@@ -75,10 +75,10 @@ This is the current schema version (v2.0.0).
 (each with optional flags) to run before the actual command under test.
 - Teardown (`[][]string`, *optional*): A list of commands
 (each with optional flags) to run after the actual command under test.
-- Command (`string`, **required**): The command to run in the test.
-- Args (`[]string`, *optional*): The arguments to pass to the command.
 - EnvVars (`[]EnvVar`, *optional*): A list of environment variables to set for
 the individual test. See the **Environment Variables** section for more info.
+- Command (`string`, **required**): The command to run in the test.
+- Args (`[]string`, *optional*): The arguments to pass to the command.
 - Expected Output (`[]string`, *optional*): List of regexes that should
 match the stdout from running the command.
 - Excluded Output (`[]string`, *optional*): List of regexes that should **not**
@@ -135,6 +135,12 @@ are checked. These tests can also be used to ensure a file or directory is
 #### Supported Fields:
 
 - Name (`string`, **required**): The name of the test
+- Setup (`[][]string`, *optional*): A list of commands
+(each with optional flags) to run before the actual command under test.
+- Teardown (`[][]string`, *optional*): A list of commands
+(each with optional flags) to run after the actual command under test.
+- EnvVars (`[]EnvVar`, *optional*): A list of environment variables to set for
+the individual test. See the **Environment Variables** section for more info.
 - Path (`string`, **required**): Path to the file or directory under test
 - ShouldExist (`boolean`, **required**): Whether or not the specified file or
 directory should exist in the file system
@@ -169,6 +175,12 @@ expected or excluded content in the specified file.
 #### Supported Fields:
 
 - Name (`string`, **required**): The name of the test
+- Setup (`[][]string`, *optional*): A list of commands
+(each with optional flags) to run before the actual command under test.
+- Teardown (`[][]string`, *optional*): A list of commands
+(each with optional flags) to run after the actual command under test.
+- EnvVars (`[]EnvVar`, *optional*): A list of environment variables to set for
+the individual test. See the **Environment Variables** section for more info.
 - Path (`string`, **required**): Path to the file under test
 - ExpectedContents (`string[]`, *optional*): List of regexes that
 should match the contents of the file

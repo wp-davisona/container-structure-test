@@ -113,6 +113,11 @@ func (st *StructureTest) RunFileExistenceTests(channel chan interface{}) {
 			channel <- res
 			continue
 		}
+		if err = driver.Setup(test.EnvVars, test.Setup); err != nil {
+			res.Errorf("error in setup: %s", err.Error())
+			channel <- res
+			continue
+		}
 		channel <- test.Run(driver)
 		driver.Destroy()
 	}

@@ -13,6 +13,11 @@ commandTests:
   command: 'sh'
   args: ['-c', 'echo $PATH']
   expectedOutput: ['/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin']
+- name: 'command setup'
+  setup: [["touch", "/command-setup.txt"]]
+  command: 'ls'
+  args: ['/command-setup.txt']
+  expectedOutput: ['/command-setup.txt']
 fileContentTests:
 - name: 'Debian Sources'
   excludedContents: ['.*gce_debian_mirror.*']
@@ -38,6 +43,10 @@ fileExistenceTests:
 - name: 'Dummy File'
   path: '/etc/dummy'
   shouldExist: false
+- name: 'File from Setup'
+  setup: [["touch", "/file-from-setup.txt"]]
+  path: '/file-from-setup.txt'
+  shouldExist: true
 licenseTests:
 - debian: true
   files:

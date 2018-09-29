@@ -25,54 +25,24 @@ import (
 )
 
 type CommandTest struct {
-	Name           string         `yaml:"name"`
-	Setup          [][]string     `yaml:"setup"`
-	Teardown       [][]string     `yaml:"teardown"`
-	EnvVars        []types.EnvVar `yaml:"envVars"`
-	ExitCode       int            `yaml:"exitCode"`
-	Command        string         `yaml:"command"`
-	Args           []string       `yaml:"args"`
-	ExpectedOutput []string       `yaml:"expectedOutput"`
-	ExcludedOutput []string       `yaml:"excludedOutput"`
-	ExpectedError  []string       `yaml:"expectedError"`
-	ExcludedError  []string       `yaml:"excludedError"` // excluded error from running command
+	BaseTest       `yaml:",inline"`
+	ExitCode       int      `yaml:"exitCode"`
+	Command        string   `yaml:"command"`
+	Args           []string `yaml:"args"`
+	ExpectedOutput []string `yaml:"expectedOutput"`
+	ExcludedOutput []string `yaml:"excludedOutput"`
+	ExpectedError  []string `yaml:"expectedError"`
+	ExcludedError  []string `yaml:"excludedError"` // excluded error from running command
 }
 
 func (ct *CommandTest) Validate(channel chan interface{}) bool {
 	res := &types.TestResult{}
-	if ct.Name == "" {
-		res.Error("Please provide a valid name for every test")
-	}
-	res.Name = ct.Name
+
 	if ct.Command == "" {
 		res.Errorf("Please provide a valid command to run for test %s", ct.Name)
 	}
-	if ct.Setup != nil {
-		for _, c := range ct.Setup {
-			if len(c) == 0 {
-				res.Error("Error in setup command configuration encountered; please check formatting and remove all empty setup commands")
-			}
-		}
-	}
-	if ct.Teardown != nil {
-		for _, c := range ct.Teardown {
-			if len(c) == 0 {
-				res.Error("Error in teardown command configuration encountered; please check formatting and remove all empty teardown commands")
-			}
-		}
-	}
-	if ct.EnvVars != nil {
-		for _, envVar := range ct.EnvVars {
-			if envVar.Key == "" || envVar.Value == "" {
-				res.Error("Please provide non-empty keys and values for all specified env vars")
-			}
-		}
-	}
-	if len(res.Errors) > 0 {
-		channel <- res
-		return false
-	}
-	return true
+
+	return ct.BaseTest.Validate(channel, res)
 }
 
 func (ct *CommandTest) LogName() string {

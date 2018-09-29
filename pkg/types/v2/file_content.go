@@ -25,7 +25,7 @@ import (
 )
 
 type FileContentTest struct {
-	Name             string   `yaml:"name"`             // name of test
+	BaseTest         `yaml:",inline"`
 	Path             string   `yaml:"path"`             // file to check existence of
 	ExpectedContents []string `yaml:"expectedContents"` // list of expected contents of file
 	ExcludedContents []string `yaml:"excludedContents"` // list of excluded contents of file
@@ -33,18 +33,11 @@ type FileContentTest struct {
 
 func (ft FileContentTest) Validate(channel chan interface{}) bool {
 	res := &types.TestResult{}
-	if ft.Name == "" {
-		res.Error("Please provide a valid name for every test")
-	}
-	res.Name = ft.Name
+
 	if ft.Path == "" {
 		res.Errorf("Please provide a valid file path for test %s", ft.Name)
 	}
-	if len(res.Errors) > 0 {
-		channel <- res
-		return false
-	}
-	return true
+	return ft.BaseTest.Validate(channel, res)
 }
 
 func (ft FileContentTest) LogName() string {
